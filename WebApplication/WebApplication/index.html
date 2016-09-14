@@ -1,32 +1,39 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <title>ToDo list</title>
-    <meta charset="utf-8"/>
-    
+    <meta charset="utf-8" />
+
     <link rel="stylesheet" type="text/css" href="Styles/site.css">
 
     <script src="Scripts/jquery-3.1.0.js" language="javascript"></script>
     <script src="Scripts/todo.js" language="javascript"></script>
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
 </head>
+
 <body>
-    <table id="tasks">
-        <thead>
-            <tr>
-                <th>Completed</th>
-                <th>Task</th>
-                <th>Actions</th>
-            </tr>
-            <!-- The row for creating new items. -->
-            <tr id="new">
-                <td><input type='checkbox' id="newCompleted" /></td>
-                <td><input type='text' id="newName" /></td>
-                <td><input type='button' id="newCreate" value='Create' /></td>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
+    <div class="content">
+        <h2>ToDo Task Manager</h2>
+        <table id="tasks">
+            <thead>
+                <tr>
+                    <th>Completed</th>
+                    <th>Task</th>
+                    <th>Actions</th>
+                </tr>
+                <!-- The row for creating new items. -->
+                <tr id="new">
+                    <td class="border-down"><input type='checkbox' id="newCompleted" /></td>
+                    <td class="border-down"><input type='text' id="newName" /></td>
+                    <td class="border-down"><input type='button' id="newCreate" value='Create' /></td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 </body>
+
 </html>

@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 using ToDoClient.Models;
+using WebApplication.Services.Interface;
+using Newtonsoft.Json;
 
 namespace ToDoClient.Services
 {
     /// <summary>
     /// Works with ToDo backend.
     /// </summary>
-    public class ToDoService
+    public class ToDoService:IDataService<ToDoItemViewModel>
     {
         /// <summary>
         /// The service URL.
@@ -53,40 +56,45 @@ namespace ToDoClient.Services
         /// </summary>
         /// <param name="userId">The User Id.</param>
         /// <returns>The list of todos.</returns>
-        public IList<ToDoItemViewModel> GetItems(int userId)
+        public async Task<IEnumerable<ToDoItemViewModel>> GetAll(int userId)
         {
-            var dataAsString = httpClient.GetStringAsync(string.Format(serviceApiUrl + GetAllUrl, userId)).Result;
-            return JsonConvert.DeserializeObject<IList<ToDoItemViewModel>>(dataAsString);
+            var dataAsString = await httpClient.GetStringAsync(string.Format(serviceApiUrl + GetAllUrl, userId));
+            return JsonConvert.DeserializeObject<IEnumerable<ToDoItemViewModel>>(dataAsString);
+        }
+
+        public async Task<ToDoItemViewModel> GetById(int userId,int id)
+        {
+            return (await GetAll(userId)).FirstOrDefault(e => e.ToDoId == id);
         }
 
         /// <summary>
         /// Creates a todo. UserId is taken from the model.
         /// </summary>
         /// <param name="item">The todo to create.</param>
-        public void CreateItem(ToDoItemViewModel item)
+        public async Task<int> Create(int userId, ToDoItemViewModel item)
         {
-            httpClient.PostAsJsonAsync(serviceApiUrl + CreateUrl, item)
-                .Result.EnsureSuccessStatusCode();
+            item.Name = $"text:{item.Name}, id:{item.Id}";
+            var result = (await httpClient.PostAsJsonAsync(serviceApiUrl + CreateUrl, item)).EnsureSuccessStatusCode();
+
+            return item.ToDoId;
         }
 
         /// <summary>
         /// Updates a todo.
         /// </summary>
         /// <param name="item">The todo to update.</param>
-        public void UpdateItem(ToDoItemViewModel item)
+        public async Task Update(int userId, ToDoItemViewModel item)
         {
-            httpClient.PutAsJsonAsync(serviceApiUrl + UpdateUrl, item)
-                .Result.EnsureSuccessStatusCode();
+            (await httpClient.PutAsJsonAsync(serviceApiUrl + UpdateUrl, item)).EnsureSuccessStatusCode();
         }
 
         /// <summary>
         /// Deletes a todo.
         /// </summary>
         /// <param name="id">The todo Id to delete.</param>
-        public void DeleteItem(int id)
+        public async Task Delete(int userId, int id)
         {
-            httpClient.DeleteAsync(string.Format(serviceApiUrl + DeleteUrl, id))
-                .Result.EnsureSuccessStatusCode();
+            (await httpClient.DeleteAsync(string.Format(serviceApiUrl + DeleteUrl, id))).EnsureSuccessStatusCode();
         }
     }
 }

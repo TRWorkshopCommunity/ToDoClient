@@ -1,24 +1,18 @@
-﻿using DAL.Interface.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System;
 
-namespace ToDoClient.Models
+namespace DAL.Interface.Entities
 {
-    public class ToDoItemViewModel: IEntity
+    public class ToDoItem: IEntity
     {
-
-        public int Id { get; set; }
         /// <summary>
         /// Gets or sets to do identifier.
         /// </summary>
         /// <value>
         /// To do identifier.
         /// </value>
-        public int ToDoId { get; set; }
+        public int Id { get; set; }
 
+        public int ToDoId { get; set; }
 
         /// <summary>
         /// Gets or sets the user identifier.
@@ -46,16 +40,21 @@ namespace ToDoClient.Models
 
         public override bool Equals(object obj)
         {
-            var castObj = obj as ToDoItemViewModel;
+            var castObj = obj as ToDoItem;
             if (castObj == null)
                 return false;
-            return (((ToDoItemViewModel) obj).Name == Name)
-                   && (((ToDoItemViewModel) obj).UserId == UserId);
+            return (((ToDoItem)obj).Name == Name)
+                   && (((ToDoItem)obj).UserId == UserId);
         }
 
         public override int GetHashCode()
         {
             return $"{Name} {UserId}".GetHashCode();
+        }
+
+        public bool Equals(ToDoItem other)
+        {
+            return Name == other.Name && UserId == other.UserId;
         }
     }
 }
