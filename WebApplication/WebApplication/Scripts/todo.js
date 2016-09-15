@@ -96,7 +96,6 @@ $(function () {
         var name = $('#newName')[0].value;
 
         tasksManager.createTask(isCompleted, name)
-            .then(tasksManager.loadTasks)
             .done(function(tasks) {
                 tasksManager.displayTasks("#tasks > tbody", tasks);
             });
@@ -111,7 +110,6 @@ $(function () {
         var name = tr.find('.name').text();
         
         tasksManager.updateTask(id, toDoId, isCompleted, name)
-            .then(tasksManager.loadTasks)
             .done(function (tasks) {
                 tasksManager.displayTasks("#tasks > tbody", tasks);
             });
@@ -123,15 +121,14 @@ $(function () {
         var toDoId = tr.attr("data-toDoId");
         var id = tr.attr("data-id");
         tasksManager.deleteTask(id, toDoId)
-            .then(tasksManager.loadTasks)
             .done(function(tasks) {
                 tasksManager.displayTasks("#tasks > tbody", tasks);
             });
     });
 
     // load all tasks on startup
-    tasksManager.loadTasks()
-        .done(function(tasks) {
+    tasksManager.loadTasks().done(function(tasks) {
             tasksManager.displayTasks("#tasks > tbody", tasks);
+            $("#animateBlock").removeClass("animate").css("display","none");
         });
 });

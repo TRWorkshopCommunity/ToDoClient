@@ -22,14 +22,14 @@ namespace WebApplication.Services
             await repository.UploadItemsAsync(userId, items).ConfigureAwait(false);
         }
 
-        public async Task<int> Create(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> Create(int userId, ToDoItem entity)
         {
             return await repository.CreateAsync(userId, entity).ConfigureAwait(false);
         }
 
-        public async Task Delete(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> Delete(int userId, ToDoItem entity)
         {
-            await repository.DeleteAsync(userId, entity.Id).ConfigureAwait(false);
+            return await repository.DeleteAsync(userId, entity.Id).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ToDoItem>> GetAll(int userId)
@@ -37,9 +37,9 @@ namespace WebApplication.Services
             return await repository.GetAllAsync(userId).ConfigureAwait(false);
         }
 
-        public async Task Update(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> Update(int userId, ToDoItem entity)
         {
-            await repository.UpdateAsync(userId, entity).ConfigureAwait(false);
+            return await repository.UpdateAsync(userId, entity).ConfigureAwait(false);
         }
     }
 }

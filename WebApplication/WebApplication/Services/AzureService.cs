@@ -13,7 +13,7 @@ namespace WebApplication.Services
     /// <summary>
     /// Works with ToDo backend.
     /// </summary>
-    public class AzureService : IDataService<ToDoItemViewModel>
+    public class AzureService
     {
         /// <summary>
         /// The service URL.

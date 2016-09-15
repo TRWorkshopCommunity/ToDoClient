@@ -6,6 +6,7 @@ using WebApplication.Services.Interface;
 using WebApplication.Models;
 using System.Threading.Tasks;
 using WebApplication.Infrastructure;
+using System.Threading;
 
 namespace WebApplication.Services
 {
@@ -16,14 +17,18 @@ namespace WebApplication.Services
         private readonly SyncStateRepository syncRepository = SyncStateRepository.Instance;
         private readonly IdGenerator generator = IdGenerator.Instance;
 
-        public async Task<int> Create(int userId, ToDoItemViewModel entity)
+        public async Task<IEnumerable<ToDoItemViewModel>> Create(int userId, ToDoItemViewModel entity)
         {
             entity.Id = generator.GenerateId();
             entity.UserId = userId;
-            await dropbox.Create(userId, entity.ToToDoItem()).ConfigureAwait(false);
-            entity.ToDoId = await azure.Create(userId, entity).ConfigureAwait(false);
-            await UpdateAzureCreatedItem(entity).ConfigureAwait(false);
-            return entity.Id;
+            var items = await dropbox.Create(userId, entity.ToToDoItem()).ConfigureAwait(false);
+            ThreadPool.QueueUserWorkItem(e =>
+            {
+                entity.ToDoId = azure.Create(userId, entity).ConfigureAwait(false).GetAwaiter().GetResult();
+                UpdateAzureCreatedItem(entity).ConfigureAwait(false);
+            });
+                      
+            return items.Select(e=>e.ToToDoItemViewModel());
         }
 
         private async Task UpdateAzureCreatedItem(ToDoItemViewModel model)
@@ -32,6 +37,7 @@ namespace WebApplication.Services
             if (item != null)
             {
                 item.ToDoId = model.ToDoId;
+                await dropbox.Update(model.UserId, item.ToToDoItem()).ConfigureAwait(false);
                 if (!item.Equals(model))
                     await azure.Update(model.UserId, model).ConfigureAwait(false);
             }
@@ -41,18 +47,26 @@ namespace WebApplication.Services
             }
         }
 
-        public async Task Delete(int userId, ToDoItemViewModel entity)
+        public async Task<IEnumerable<ToDoItemViewModel>> Delete(int userId, ToDoItemViewModel entity)
         {
-            await dropbox.Delete(userId, entity.ToToDoItem()).ConfigureAwait(false);
+            var items = await dropbox.Delete(userId, entity.ToToDoItem()).ConfigureAwait(false);
             if (entity.ToDoId > 0)
-                await azure.Delete(userId, entity).ConfigureAwait(false);
+                ThreadPool.QueueUserWorkItem(e =>
+                {
+                    azure.Delete(userId, entity).ConfigureAwait(false);
+                });              
+            return items.Select(e=>e.ToToDoItemViewModel());
         }
 
-        public async Task Update(int userId, ToDoItemViewModel entity)
+        public async Task<IEnumerable<ToDoItemViewModel>> Update(int userId, ToDoItemViewModel entity)
         {
-            await dropbox.Update(userId, entity.ToToDoItem()).ConfigureAwait(false);
+            var items = await dropbox.Update(userId, entity.ToToDoItem()).ConfigureAwait(false);
             if (entity.ToDoId > 0)
-                await azure.Update(userId, entity).ConfigureAwait(false);
+                ThreadPool.QueueUserWorkItem(e =>
+                {
+                    azure.Update(userId, entity).ConfigureAwait(false);
+                });              
+            return items.Select(e => e.ToToDoItemViewModel());
         }
 
         #region GetAll Method

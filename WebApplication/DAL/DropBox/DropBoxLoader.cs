@@ -20,26 +20,27 @@ namespace DAL.DropBox
             return items;
         }
 
-        public async Task DeleteAsync(int userId, int id)
+        public async Task<IEnumerable<ToDoItem>> DeleteAsync(int userId, int id)
         {
             var json = await client.DownloadFileAsync(userId);
             var items = serializer.Deserialize<ToDoItem>(json).ToList();
             items.RemoveAll(e => e.Id == id);
             json = serializer.Serialize(items);
             await client.UploadFileAsync(userId, json).ConfigureAwait(false);
+            return items;
         }
 
-        public async Task<int> CreateAsync(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> CreateAsync(int userId, ToDoItem entity)
         {
             var json = await client.DownloadFileAsync(userId);
             var items = serializer.Deserialize<ToDoItem>(json)?.ToList() ?? new List<ToDoItem>();
             items.Add(entity);
             json = serializer.Serialize(items);
             await client.UploadFileAsync(userId, json).ConfigureAwait(false);
-            return entity.Id;
+            return items;
         }
 
-        public async Task UpdateAsync(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> UpdateAsync(int userId, ToDoItem entity)
         {
             var json = await client.DownloadFileAsync(userId);
             var items = serializer.Deserialize<ToDoItem>(json).ToList();
@@ -47,6 +48,7 @@ namespace DAL.DropBox
             items[index] = entity;
             json = serializer.Serialize(items);
             await client.UploadFileAsync(userId, json).ConfigureAwait(false);
+            return items;
         }
 
         public async Task UploadItemsAsync(int userId, IEnumerable<ToDoItem> items)

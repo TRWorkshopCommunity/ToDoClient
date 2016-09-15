@@ -13,14 +13,14 @@ namespace DAL.Repository
     {
         private readonly DropBoxLoader loader = new DropBoxLoader();
 
-        public async Task<int> CreateAsync(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> CreateAsync(int userId, ToDoItem entity)
         {
             return await loader.CreateAsync(userId, entity).ConfigureAwait(false);
         }
 
-        public async Task DeleteAsync(int userId, int id)
+        public async Task<IEnumerable<ToDoItem>> DeleteAsync(int userId, int id)
         {
-            await loader.DeleteAsync(userId, id).ConfigureAwait(false);
+            return await loader.DeleteAsync(userId, id).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ToDoItem>> GetAllAsync(int userId)
@@ -28,9 +28,9 @@ namespace DAL.Repository
             return await loader.GetAllAsync(userId).ConfigureAwait(false);
         }
 
-        public async Task UpdateAsync(int userId, ToDoItem entity)
+        public async Task<IEnumerable<ToDoItem>> UpdateAsync(int userId, ToDoItem entity)
         {
-            await loader.UpdateAsync(userId, entity).ConfigureAwait(false);
+            return await loader.UpdateAsync(userId, entity).ConfigureAwait(false);
         }
 
 

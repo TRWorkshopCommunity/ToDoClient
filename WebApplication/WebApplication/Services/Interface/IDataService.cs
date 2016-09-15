@@ -9,9 +9,9 @@ namespace WebApplication.Services.Interface
 {
     public interface IDataService<TEntity> where TEntity : IEntity
     {
-        Task<int> Create(int userId, TEntity entity);
-        Task Update(int userId, TEntity entity);
-        Task Delete(int userId, TEntity entity);
+        Task<IEnumerable<TEntity>> Create(int userId, TEntity entity);
+        Task<IEnumerable<TEntity>> Update(int userId, TEntity entity);
+        Task<IEnumerable<TEntity>> Delete(int userId, TEntity entity);
         Task<IEnumerable<TEntity>> GetAll(int userId);
 
     }

@@ -32,30 +32,30 @@ namespace WebApplication.Controllers
         /// Updates the existing todo-item.
         /// </summary>
         /// <param name="todo">The todo-item to update.</param>
-        public void Put(ToDoItemViewModel todo)
+        public async Task<IList<ToDoItemViewModel>> Put(ToDoItemViewModel todo)
         {
             todo.UserId = userService.GetOrCreateUser();
-            service.Update(todo.UserId, todo);
+            return (await service.Update(todo.UserId, todo).ConfigureAwait(false)).ToList();
         }
 
         /// <summary>
         /// Deletes the specified todo-item.
         /// </summary>
         /// <param name="model">The todo model.</param>
-        public void Delete(ToDoItemViewModel model)
+        public async Task<IList<ToDoItemViewModel>> Delete(ToDoItemViewModel model)
         {
             model.UserId = userService.GetOrCreateUser();
-            service.Delete(model.UserId, model);
+            return (await service.Delete(model.UserId, model).ConfigureAwait(false)).ToList();
         }
 
         /// <summary>
         /// Creates a new todo-item.
         /// </summary>
         /// <param name="todo">The todo-item to create.</param>
-        public void Post(ToDoItemViewModel todo)
+        public async Task<IList<ToDoItemViewModel>> Post(ToDoItemViewModel todo)
         {       
             todo.UserId = userService.GetOrCreateUser();
-            service.Create(todo.UserId, todo);
+            return (await service.Create(todo.UserId, todo).ConfigureAwait(false)).ToList();
         }
     }
 }

@@ -81,3 +81,17 @@ body {
 .border-down {
     border-bottom: 1px solid grey;
 }
+
+.animate
+{
+    background-image:url(../Images/wyc-wyc.gif);
+    background-repeat:no-repeat;
+    background-size: 70%;
+    background-position:center;
+}
+
+#animateBlock{
+    width:40%;
+    height:120px;
+    margin:auto;
+}

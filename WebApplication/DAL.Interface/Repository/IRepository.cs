@@ -8,11 +8,11 @@ namespace DAL.Interface.Repository
     {
         Task<IEnumerable<TEntity>> GetAllAsync(int userId);
 
-        Task DeleteAsync(int userId, int id);
+        Task<IEnumerable<TEntity>> DeleteAsync(int userId, int id);
 
-        Task<int> CreateAsync(int userId, TEntity entity);
+        Task<IEnumerable<TEntity>> CreateAsync(int userId, TEntity entity);
 
-        Task UpdateAsync(int userId, TEntity entity);
+        Task<IEnumerable<TEntity>> UpdateAsync(int userId, TEntity entity);
 
     }
 }
