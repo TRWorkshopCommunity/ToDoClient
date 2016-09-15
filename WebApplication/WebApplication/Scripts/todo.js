@@ -91,18 +91,21 @@
 
 $(function () {
     // add new task button click handler
-    $("#newCreate").click(function() {
+    $("#newCreate").click(function () {
+        $("#animateBlock").css("display", "block");
         var isCompleted = $('#newCompleted')[0].checked;
         var name = $('#newName')[0].value;
 
         tasksManager.createTask(isCompleted, name)
             .done(function(tasks) {
                 tasksManager.displayTasks("#tasks > tbody", tasks);
+                $("#animateBlock").css("display", "none");
             });
     });
 
     // bind update task checkbox click handler
     $("#tasks > tbody").on('change', '.completed', function () {
+        $("#animateBlock").css("display", "block");
         var tr = $(this).parent().parent();
         var toDoId = tr.attr("data-toDoId");
         var id = tr.attr("data-id");
@@ -111,17 +114,20 @@ $(function () {
         
         tasksManager.updateTask(id, toDoId, isCompleted, name)
             .done(function (tasks) {
+                $("#animateBlock").css("display", "none");
                 tasksManager.displayTasks("#tasks > tbody", tasks);
             });
     });
 
     // bind delete button click for future rows
     $('#tasks > tbody').on('click', '.delete-button', function () {
+        $("#animateBlock").css("display", "block");
         var tr = $(this).parent().parent();
         var toDoId = tr.attr("data-toDoId");
         var id = tr.attr("data-id");
         tasksManager.deleteTask(id, toDoId)
-            .done(function(tasks) {
+            .done(function (tasks) {
+                $("#animateBlock").css("display", "none");
                 tasksManager.displayTasks("#tasks > tbody", tasks);
             });
     });
@@ -129,6 +135,6 @@ $(function () {
     // load all tasks on startup
     tasksManager.loadTasks().done(function(tasks) {
             tasksManager.displayTasks("#tasks > tbody", tasks);
-            $("#animateBlock").removeClass("animate").css("display","none");
+            $("#animateBlock").css("display","none");
         });
 });
