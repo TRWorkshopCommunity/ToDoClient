@@ -7,9 +7,8 @@ using DAL.Interface.Entities;
 
 namespace DAL.Interface.Repository
 {
-    public interface IQueueRepository
+    public interface IDropboxRepository<TEntity> : IRepository<TEntity> where TEntity : IEntity
     {
-        Task<int> SetInQueueAsync(int userId, ToDoItemAction entity);
-        Task<ToDoItemAction> TakeFromQueueAsync(int userId, int id);
+        Task UploadItemsAsync(int userId, IEnumerable<ToDoItem> items);
     }
 }

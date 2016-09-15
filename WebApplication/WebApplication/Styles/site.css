@@ -35,11 +35,11 @@ body {
     user-select: none;
 }
 
-#newCreate:hover {
+#newCreate:hover,.delete-button:hover {
     background-color: red;
 }
 
-#newCreate:active {
+#newCreate:active,.delete-button:active {
     background-color: purple;
 }
 

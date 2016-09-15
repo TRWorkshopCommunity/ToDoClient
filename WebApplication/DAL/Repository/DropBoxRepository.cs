@@ -9,59 +9,34 @@ using DAL.Interface.Repository;
 
 namespace DAL.Repository
 {
-    public class DropBoxRepository : IRepository<ToDoItem>, IDisposable
+    public class DropBoxRepository : IDropboxRepository<ToDoItem>, IDisposable
     {
         private readonly DropBoxLoader loader = new DropBoxLoader();
 
-        public int Create(int userId, ToDoItem entity)
-        {
-            return CreateAsync(userId, entity).Result;
-        }
-
         public async Task<int> CreateAsync(int userId, ToDoItem entity)
         {
-            return await loader.CreateAsync(userId, entity);
-        }
-
-        public void Delete(int userId, int id)
-        {
-            DeleteAsync(userId, id).RunSynchronously();
+            return await loader.CreateAsync(userId, entity).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(int userId, int id)
         {
-            await loader.DeleteAsync(userId, id);
-        }
-
-        public IEnumerable<ToDoItem> GetAll(int userId)
-        {
-            return GetAllAsync(userId).Result;
+            await loader.DeleteAsync(userId, id).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ToDoItem>> GetAllAsync(int userId)
         {
-            return await loader.GetAllAsync(userId);
-        }
-
-        public ToDoItem GetById(int userId, int id)
-        {
-            return GetByIdAsync(userId, id).Result;
-        }
-
-        public async Task<ToDoItem> GetByIdAsync(int userId, int id)
-        {
-            return await loader.GetByIdAsync(userId, id);
-        }
-
-
-        public void Update(int userId, ToDoItem entity)
-        {
-            UpdateAsync(userId,entity).RunSynchronously();
+            return await loader.GetAllAsync(userId).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(int userId, ToDoItem entity)
         {
-            await loader.UpdateAsync(userId, entity);
+            await loader.UpdateAsync(userId, entity).ConfigureAwait(false);
+        }
+
+
+        public async Task UploadItemsAsync(int userId, IEnumerable<ToDoItem> items)
+        {
+            await loader.UploadItemsAsync(userId, items).ConfigureAwait(false);
         }
 
         #region IDisposable Support
@@ -92,7 +67,6 @@ namespace DAL.Repository
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
         #endregion
     }
 }

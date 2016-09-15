@@ -138,13 +138,13 @@
     <Compile Include="Infrastructure\IdGenerator.cs" />
     <Compile Include="Infrastructure\Mapper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Infrastructure\SyncStateRepository.cs" />
     <Compile Include="Models\ToDoViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DropBoxService.cs" />
     <Compile Include="Services\Interface\IDataService.cs" />
     <Compile Include="Services\MainService.cs" />
-    <Compile Include="Services\TaskManager.cs" />
-    <Compile Include="Services\ToDoService.cs" />
+    <Compile Include="Services\AzureService.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace DAL.Common
         public IEnumerable<T> Deserialize<T>(string json)
         {
             var result = JsonConvert.DeserializeObject<T[]>(json);
-            return result;
+            return result ?? new T[0];
         }
 
         public object Deserialize(string json)

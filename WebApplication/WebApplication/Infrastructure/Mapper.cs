@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DAL.Interface.Entities;
-using ToDoClient.Models;
+using WebApplication.Models;
 
 namespace WebApplication.Infrastructure
 {
@@ -18,6 +18,18 @@ namespace WebApplication.Infrastructure
                 Name = model.Name,
                 ToDoId = model.ToDoId,
                 UserId = model.UserId
+            };
+        }
+
+        public static ToDoItemViewModel ToToDoItemViewModel(this ToDoItem item)
+        {
+            return new ToDoItemViewModel()
+            {
+                Id = item.Id,
+                IsCompleted = item.IsCompleted,
+                Name = item.Name,
+                ToDoId = item.ToDoId,
+                UserId = item.UserId
             };
         }
     }

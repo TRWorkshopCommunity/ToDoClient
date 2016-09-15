@@ -35,8 +35,7 @@ namespace DIContainer
             kernel.Bind<IGenerator>().To<Generator.CustomGenerator.Generator>().InSingletonScope();
 
             #region repositories 
-            kernel.Bind<IRepository<ToDoItem>>().To<DropBoxRepository>();
-            kernel.Bind<IQueueRepository>().To<DropBoxQueueRepository>();
+            kernel.Bind<IDropboxRepository<ToDoItem>>().To<DropBoxRepository>().InSingletonScope();
             #endregion
         }
     }

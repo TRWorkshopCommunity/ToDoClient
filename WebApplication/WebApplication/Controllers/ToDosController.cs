@@ -2,30 +2,20 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
-using DAL.Interface.Entities;
-using DAL.Interface.Repository;
-using ToDoClient.Models;
 using ToDoClient.Services;
 using WebApplication.Infrastructure;
+using WebApplication.Models;
 using WebApplication.Services;
 
-namespace ToDoClient.Controllers
+namespace WebApplication.Controllers
 {
     /// <summary>
     /// Processes todo requests.
     /// </summary>
     public class ToDosController : ApiController
     {
-        private readonly ToDoService todoService = new ToDoService();
         private readonly UserService userService = new UserService();
-
-        private readonly IRepository<ToDoItem> repository;
-        private readonly MainService service = new MainService(new DropBoxService(), new ToDoService());
-        public ToDosController()
-        {
-            repository = DependencyResolver.Current.GetService<IRepository<ToDoItem>>();
-        }
+        private readonly MainService service = new MainService();
 
         /// <summary>
         /// Returns all todo-items for the current user.
@@ -34,42 +24,38 @@ namespace ToDoClient.Controllers
         public async Task<IList<ToDoItemViewModel>> Get()
         {
             var userId = userService.GetOrCreateUser();
-            //return (await todoService.GetAll(userId)).ToList();
-            return (await service.GetAll(userId)).ToList();
+            var items = await service.GetAll(userId).ConfigureAwait(false);
+            return items.ToList();
         }
 
         /// <summary>
         /// Updates the existing todo-item.
         /// </summary>
         /// <param name="todo">The todo-item to update.</param>
-        public async void Put(ToDoItemViewModel todo)
+        public void Put(ToDoItemViewModel todo)
         {
             todo.UserId = userService.GetOrCreateUser();
-            //await todoService.Update(todo.UserId, todo);
-            await service.Update(todo.UserId, todo);
+            service.Update(todo.UserId, todo);
         }
 
         /// <summary>
         /// Deletes the specified todo-item.
         /// </summary>
-        /// <param name="id">The todo item identifier.</param>
-        public async void Delete(ToDoItemViewModel model)
+        /// <param name="model">The todo model.</param>
+        public void Delete(ToDoItemViewModel model)
         {
-            var userId = userService.GetOrCreateUser();
-            //await todoService.Delete(userId, id);
-            await service.Delete(model.UserId, model);
+            model.UserId = userService.GetOrCreateUser();
+            service.Delete(model.UserId, model);
         }
 
         /// <summary>
         /// Creates a new todo-item.
         /// </summary>
         /// <param name="todo">The todo-item to create.</param>
-        public async void Post(ToDoItemViewModel todo)
-        {
-            
-            todo.Id = IdGenerator.Instance.GenerateId();
+        public void Post(ToDoItemViewModel todo)
+        {       
             todo.UserId = userService.GetOrCreateUser();
-            await service.Create(todo.UserId, todo);
+            service.Create(todo.UserId, todo);
         }
     }
 }

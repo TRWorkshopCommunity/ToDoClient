@@ -38,7 +38,7 @@ namespace DAL.DropBox
         {
             byte[] byteArray = Encoding.UTF8.GetBytes(json);
             var stream = new MemoryStream(byteArray);
-            await client.Files.UploadAsync(GenerateFileName(userId), WriteMode.Overwrite.Instance, body: stream);
+            await client.Files.UploadAsync(GenerateFileName(userId), WriteMode.Overwrite.Instance, body: stream).ConfigureAwait(false);
         }
 
         public async Task<string> DownloadFileAsync(int userId)
@@ -49,7 +49,7 @@ namespace DAL.DropBox
                 if (item.IsFile && item.Name == GenerateFileName(userId).TrimStart(new []{'/'}))
                     using (var response = await client.Files.DownloadAsync(GenerateFileName(userId)))
                     {
-                        return await response.GetContentAsStringAsync();
+                        return await response.GetContentAsStringAsync().ConfigureAwait(false);
                     }
             }
             return "";

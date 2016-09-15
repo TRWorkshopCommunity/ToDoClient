@@ -11,8 +11,7 @@ namespace WebApplication.Services.Interface
     {
         Task<int> Create(int userId, TEntity entity);
         Task Update(int userId, TEntity entity);
-        Task Delete(int userId, int id);
-        Task<TEntity> GetById(int userId, int id);
+        Task Delete(int userId, TEntity entity);
         Task<IEnumerable<TEntity>> GetAll(int userId);
 
     }
